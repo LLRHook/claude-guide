@@ -26,6 +26,9 @@ try {
   });
 
   // 4. Track tool calls and graduation progress
+  //    NOTE: We do NOT use lib/profile.mjs incrementTool() here because the
+  //    hook must skip the "seen" increment for graduated tools (per spec §11),
+  //    while incrementTool() always increments. The hook owns its own logic.
   if (profile.tools && profile.tools[tool_name]) {
     // Always count total calls, even for graduated tools
     profile.total_tool_calls = (profile.total_tool_calls || 0) + 1;

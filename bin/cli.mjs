@@ -3,19 +3,9 @@
 import { install } from "../lib/installer.mjs";
 import { uninstall } from "../lib/uninstaller.mjs";
 import { readProfile, writeProfile, defaultProfile, graduateTool, setLevel } from "../lib/profile.mjs";
-import { readEntries, groupBySessions, renderJournal, renderStats } from "../lib/journal.mjs";
+import { readEntries, groupBySessions, renderJournal, renderStats, formatDate } from "../lib/journal.mjs";
 import { PROFILE_PATH, GRADUATION_PATH } from "../lib/paths.mjs";
 import { existsSync, rmSync } from "fs";
-
-const MONTHS = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-];
-
-function formatDate(isoString) {
-  const d = new Date(isoString);
-  return `${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
-}
 
 function capitalize(str) {
   if (!str) return "";

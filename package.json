@@ -11,6 +11,9 @@
     "./hooks/pre-tool.mjs": "./hooks/pre-tool.mjs",
     "./hooks/post-tool.mjs": "./hooks/post-tool.mjs"
   },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
   "files": [
     "bin/",
     "hooks/",

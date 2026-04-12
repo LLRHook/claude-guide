@@ -1,0 +1,104 @@
+Claude Code Settings Issue — Co-Authored-By Override
+=====================================================
+Date: April 12, 2026
+Context: During claude-guide project setup
+
+Summary
+-------
+The user had a PreToolUse hook (validate-git-author.sh) that explicitly
+blocked Co-Authored-By trailers in git commits and PR descriptions. This
+was a deliberate choice — the hook was written to exit 2 and block any
+commit containing the trailer.
+
+Despite this, Claude Code's system prompt contains hardcoded instructions
+to always append a Co-Authored-By trailer to every commit message:
+
+    Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
+
+When Claude was asked to amend a commit, it added the Co-Authored-By line
+because the system prompt instructed it to — overriding the user's explicit
+hook-based preference. The hook only fires on PreToolUse for Bash commands
+containing "git commit", so when the amend was performed, the hook blocked
+it. But the user then updated the hook to allow Co-Authored-By (thinking
+the system prompt couldn't be changed), and the trailer was added.
+
+The user then had to amend the commit again to remove it.
+
+Key Issues
+----------
+1. SYSTEM PROMPT vs USER PREFERENCE CONFLICT
+   The system prompt's commit instructions are not user-configurable via
+   the system prompt itself. The user had no way to know the system prompt
+   was going to inject a Co-Authored-By line — they only discovered it
+   when it appeared in their commit.
+
+2. CLAUDE DID NOT FLAG THE CONFLICT
+   When the user's hook was blocking Co-Authored-By, Claude should have
+   recognized the conflict between the system prompt's instructions and
+   the user's hook, and flagged it. Instead, it just followed the system
+   prompt when the hook was later removed.
+
+3. THE SETTING EXISTS BUT WASN'T SURFACED
+   The fix turned out to be a simple settings.json entry:
+
+       "attribution": {
+           "commit": "",
+           "pr": ""
+       }
+
+   This completely disables the Co-Authored-By trailer. But:
+   - Claude didn't know about this setting initially
+   - Claude told the user the system prompt was "not configurable"
+   - Only after explicit research was the attribution setting found
+   - There's also a deprecated "includeCoAuthoredBy": false that works
+
+4. ONBOARDING GAP
+   During onboarding or initial setup, users are not told:
+   - That Claude will add Co-Authored-By to their commits by default
+   - That this behavior is configurable via the attribution setting
+   - That their hooks might conflict with system prompt instructions
+
+5. GITHUB CONTRIBUTOR SIDE EFFECT
+   The Co-Authored-By trailer caused GitHub to list Claude/Anthropic as
+   a contributor on the repo. Even after removing the trailer and force
+   pushing, GitHub's contributor cache retained the entry temporarily.
+   For users who care about contributor attribution (e.g., professional
+   repos, client work), this is a real problem.
+
+Resolution
+----------
+- Added "attribution": { "commit": "", "pr": "" } to ~/.claude/settings.json
+- Amended the commit to remove the Co-Authored-By trailer
+- Force pushed to update GitHub
+- Updated the validate-git-author.sh hook to remove the now-unnecessary
+  Co-Authored-By blocking (the setting handles it)
+
+Recommendation for Claude Onboarding
+-------------------------------------
+1. Surface the attribution setting during onboarding or first commit
+2. If a user's hook blocks Co-Authored-By, detect the conflict and
+   suggest the attribution setting as the cleaner solution
+3. Document that the system prompt adds Co-Authored-By by default
+   and how to disable it
+4. Claude should be aware of all configurable settings in settings.json
+   rather than saying "the system prompt is not configurable" when a
+   setting exists for the specific behavior in question
+
+Timeline of Events
+------------------
+1. User had validate-git-author.sh hook blocking Co-Authored-By
+2. Claude made initial commit — hook blocked the trailer (worked correctly)
+3. User asked to amend commit with correct email
+4. Claude amended commit, added Co-Authored-By (system prompt instruction)
+5. Hook blocked it again — Claude retried without it
+6. User asked about the hook and why Co-Authored-By wasn't there
+7. User discovered the hook was blocking it, asked to allow it
+8. Claude updated hook to remove Co-Authored-By blocking
+9. Claude amended commit WITH Co-Authored-By trailer
+10. User noticed Claude was now listed as GitHub contributor
+11. User asked if system prompt was configurable
+12. Claude said "no — not user-configurable"
+13. User asked to research actual config options
+14. Research found the attribution setting in settings.json
+15. Applied the setting and re-amended the commit without the trailer
+16. Force pushed to clean up GitHub contributor list
