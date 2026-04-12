@@ -1,0 +1,156 @@
+{
+  "permanent": [
+    {
+      "id": "rm_rf",
+      "tool": "Bash",
+      "field": "command",
+      "pattern": "rm\\s+.*(-[a-zA-Z]*f[a-zA-Z]*r[a-zA-Z]*|--force.*--recursive|--recursive.*--force|-rf|-fr|--force\\s+-r|-r\\s+--force|-r\\s+-f|-f\\s+-r)",
+      "title": "HOLD ON — this would permanently delete files",
+      "what": "The rm -rf command permanently deletes files and folders from your computer. Unlike moving files to the trash, there is no undo — they are gone immediately with no way to recover them.",
+      "analogy": "This is like emptying your trash can, but without the trash can — the files disappear instantly with no recovery possible.",
+      "suggestion": "Ask Claude specifically which files need to be removed and why, then decide together."
+    },
+    {
+      "id": "git_force_push",
+      "tool": "Bash",
+      "field": "command",
+      "pattern": "git\\s+push\\s+.*(-f\\b|--force(?!-with-lease)\\b)|(git\\s+push\\s+(-f\\b|--force(?!-with-lease)\\b))",
+      "title": "HOLD ON — this would overwrite the shared version history",
+      "what": "A force push replaces the version history on the server with your local copy. Anyone else working on the same project could lose their work, and the shared history would be rewritten.",
+      "analogy": "This is like overwriting a shared Google Doc with your own copy, erasing everyone else's edits.",
+      "suggestion": "Ask Claude about using a regular push instead, and whether the changes can be merged normally."
+    },
+    {
+      "id": "git_reset_hard",
+      "tool": "Bash",
+      "field": "command",
+      "pattern": "git\\s+reset\\s+--hard",
+      "title": "HOLD ON — this would throw away all unsaved changes",
+      "what": "git reset --hard discards all uncommitted changes in your project — every edit you've made that hasn't been saved to a commit is permanently lost.",
+      "analogy": "This is like closing every open document without saving — everything you've typed since the last save point disappears.",
+      "suggestion": "Ask Claude to stash your changes first so you can get them back if needed."
+    },
+    {
+      "id": "dd_dev",
+      "tool": "Bash",
+      "field": "command",
+      "pattern": "\\bdd\\b.*of=\\/dev\\/",
+      "title": "HOLD ON — this would overwrite your hard drive",
+      "what": "The dd command with of=/dev/ writes data directly to a hardware device — in this case, your disk. This can corrupt or destroy everything on the drive.",
+      "analogy": "This is like directly overwriting the physical disk your computer runs on — it can make your computer unbootable.",
+      "suggestion": "This command is almost never needed for normal tasks. Ask Claude what you're trying to accomplish and find a safer approach."
+    },
+    {
+      "id": "mkfs",
+      "tool": "Bash",
+      "field": "command",
+      "pattern": "\\bmkfs\\.",
+      "title": "HOLD ON — this would erase and reformat a drive",
+      "what": "mkfs (make filesystem) erases everything on a disk or partition and reformats it from scratch. All data on that drive is permanently destroyed.",
+      "analogy": "This is like factory-resetting a hard drive — everything stored on it is wiped clean.",
+      "suggestion": "This is almost never needed for normal tasks. Ask Claude what you're trying to accomplish and find a safer approach."
+    },
+    {
+      "id": "dev_redirect",
+      "tool": "Bash",
+      "field": "command",
+      "pattern": ">\\s*\\/dev\\/(sd[a-z]|hd[a-z])",
+      "title": "HOLD ON — this would overwrite your hard drive",
+      "what": "Redirecting output to /dev/sda or /dev/hd writes data directly to the raw hardware of your disk. This can corrupt or destroy everything on the drive.",
+      "analogy": "This is like pouring data directly onto the physical disk platters — it can make your computer completely unbootable.",
+      "suggestion": "This command is almost never needed for normal tasks. Ask Claude what you're trying to accomplish and find a safer approach."
+    },
+    {
+      "id": "fork_bomb",
+      "tool": "Bash",
+      "field": "command",
+      "pattern": ":\\(\\)\\s*\\{\\s*:|:\\(\\)\\s*\\{\\s*:[ \\t]*\\|[ \\t]*:[ \\t]*&",
+      "title": "HOLD ON — this command would crash your computer",
+      "what": "This is a fork bomb — a command that creates copies of itself infinitely until your computer runs out of memory and freezes or crashes. There is no recovery other than a hard reboot.",
+      "analogy": "This is like a machine that endlessly makes copies of itself until there's no room left and everything stops working.",
+      "suggestion": "This command has no legitimate use for normal tasks. Do not run it."
+    },
+    {
+      "id": "system_write_unix",
+      "tool": ["Write", "Edit"],
+      "field": "file_path",
+      "pattern": "^\\/(etc|usr|sys|boot|proc)\\/",
+      "title": "HOLD ON — Claude is trying to change a system file",
+      "what": "The paths /etc/, /usr/, /sys/, /boot/, and /proc/ contain core operating system files. Changing them can break your computer's ability to start up or run basic programs.",
+      "analogy": "These are like the internal wiring of your computer — not the files you work with day to day, but the ones that make everything else work.",
+      "suggestion": "Ask Claude why it needs to change a system file. For almost all tasks, this should not be necessary."
+    },
+    {
+      "id": "system_write_unix_bash",
+      "tool": "Bash",
+      "field": "command",
+      "pattern": "(>>?|\\btee\\b)\\s+\\/?(etc|usr|sys|boot|proc)\\/",
+      "title": "HOLD ON — Claude is trying to change a system file",
+      "what": "This command is attempting to write to a core operating system directory (/etc/, /usr/, /sys/, /boot/, or /proc/). Changing these files can break your computer's ability to start up or run basic programs.",
+      "analogy": "These are like the internal wiring of your computer — not the files you work with day to day, but the ones that make everything else work.",
+      "suggestion": "Ask Claude why it needs to change a system file. For almost all tasks, this should not be necessary."
+    },
+    {
+      "id": "system_write_windows",
+      "tool": ["Write", "Edit"],
+      "field": "file_path",
+      "pattern": "^[Cc]:\\\\(Windows|Program Files)",
+      "flags": "i",
+      "title": "HOLD ON — Claude is trying to change a system file",
+      "what": "The C:\\Windows\\ and C:\\Program Files\\ directories contain core Windows operating system files. Changing them can break your computer's ability to start up or run programs.",
+      "analogy": "These are like the internal wiring of your computer — not the files you work with day to day, but the ones that make everything else work.",
+      "suggestion": "Ask Claude why it needs to change a system file. For almost all tasks, this should not be necessary."
+    }
+  ],
+  "beginner": [
+    {
+      "id": "curl_pipe_sh",
+      "tool": "Bash",
+      "field": "command",
+      "pattern": "curl\\b.*\\|\\s*(ba?sh|zsh)",
+      "title": "HOLD ON — this would download and run unknown code",
+      "what": "This command downloads a script from the internet and immediately runs it on your computer — without you being able to see what's in it first. The script could do anything, including installing malicious software.",
+      "analogy": "This is like opening an email attachment from a stranger and running whatever program is inside — without scanning it first.",
+      "suggestion": "Ask Claude to download the script first so you can review it, then run it as a separate step."
+    },
+    {
+      "id": "chmod_777",
+      "tool": "Bash",
+      "field": "command",
+      "pattern": "chmod\\s+(777|\\+x\\s+\\/)",
+      "title": "HOLD ON — this would make files accessible to everyone",
+      "what": "chmod 777 or chmod +x / removes all access restrictions on files, making them readable, writable, and executable by any user or program on the computer. This is a significant security risk.",
+      "analogy": "This is like handing a copy of your house key to everyone in town — anyone can come in and change anything.",
+      "suggestion": "Ask Claude what specific permission is needed and why. Usually a much more limited permission change is the right approach."
+    },
+    {
+      "id": "eval_subshell",
+      "tool": "Bash",
+      "field": "command",
+      "pattern": "eval\\s+\\$\\(",
+      "title": "HOLD ON — Claude is building a command dynamically",
+      "what": "eval $( ) takes the output of another command and runs it as a new command. This means the computer is generating and executing instructions on the fly, which can be unpredictable and hard to review.",
+      "analogy": "This is like asking someone to write instructions for you and then immediately following them without reading them first.",
+      "suggestion": "Ask Claude what command it's trying to construct and have it write out the final command directly instead."
+    },
+    {
+      "id": "npm_global",
+      "tool": "Bash",
+      "field": "command",
+      "pattern": "npm\\s+(install|i)\\s+(-g|--global)",
+      "title": "HOLD ON — Claude is installing something system-wide",
+      "what": "npm install -g installs a package globally on your computer, making it available to all projects and all users. This can affect other projects and is harder to clean up than a local install.",
+      "analogy": "This is like installing an app for every user on a shared family computer, rather than just for yourself.",
+      "suggestion": "Ask Claude if a local install (without -g) would work for your project. Most of the time it will."
+    }
+  ],
+  "sensitive_file_warning": [
+    {
+      "id": "sensitive_path",
+      "fields": ["file_path", "path", "command"],
+      "pattern": "password|secret|token|credential|\\.env",
+      "flags": "i",
+      "message": "This file might contain passwords or secrets. Make sure Claude isn't about to share them outside your computer."
+    }
+  ]
+}

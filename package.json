@@ -1,0 +1,30 @@
+{
+  "name": "claude-guide",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Training wheels for Claude Code. Always-on explanations and guard rails for non-developer users.",
+  "bin": {
+    "claude-guide": "./bin/cli.mjs"
+  },
+  "exports": {
+    ".": "./bin/cli.mjs",
+    "./hooks/pre-tool.mjs": "./hooks/pre-tool.mjs",
+    "./hooks/post-tool.mjs": "./hooks/post-tool.mjs"
+  },
+  "files": [
+    "bin/",
+    "hooks/",
+    "lib/",
+    "data/",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "MIT",
+  "keywords": ["claude", "claude-code", "beginner", "training", "guard-rails"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/victorivanov/claude-guide"
+  }
+}
