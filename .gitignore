@@ -2,3 +2,7 @@ node_modules/
 *.tmp
 .DS_Store
 Thumbs.db
+
+# Local agent context
+CLAUDE.md
+.claude/
