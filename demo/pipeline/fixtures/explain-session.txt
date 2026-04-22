@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Captured: 2026-04-18T17:07:17Z
+# Git SHA: 5925e26
+# Regen: bash demo/pipeline/fixtures/capture-fixture.sh
+# Stale if: data/claude-md-overlay.md or lib/installer.mjs changes
+
+DIM="[2m"
+BOLD="[1m"
+RESET="[0m"
+ORANGE="[38;2;215;119;87m"
+WHITE="[38;2;245;237;227m"
+GRAY="[38;2;122;110;104m"
+
+printf "${GRAY}  Claude is about to use the ${WHITE}Read${GRAY} tool${RESET}\n"
+printf "\n"
+printf "  ${DIM}>${RESET} ${ORANGE}What I'm about to do: Open and read the README.md file to understand what this project is about.${RESET}\n"
+printf "  ${DIM}>${RESET} ${ORANGE}In everyday terms: I'm opening a document to read what's inside it — just like double-clicking a file to view it.${RESET}\n"
+printf "  ${DIM}>${RESET} ${ORANGE}What you'll see next: The contents of the file with line numbers.${RESET}\n"
+printf "\n"

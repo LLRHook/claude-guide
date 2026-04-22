@@ -1,0 +1,27 @@
+# Recorded clips (large video files, don't commit)
+clips/*.mov
+clips/*.mp4
+
+# Generated overlays (regenerate with generate-overlays.py)
+overlays/
+
+# Temp files from stitching
+.tmp/
+__pycache__/
+*.pyc
+
+# Raw Claude stream captures can include local/session metadata.
+fixtures/.capture-raw.json
+
+# Final output videos (large, don't commit)
+output/
+
+# Generated subtitle files (regenerate with generate-subtitles.py)
+subtitles/*.srt
+subtitles/frames/
+
+# Downloaded audio assets (regenerate with curl per LICENSES.md)
+assets/audio/*.mp3
+assets/audio/*.wav
+
+# NOTE: fixtures/explain-session.txt is intentionally committed (not ignored)

@@ -12,7 +12,8 @@
     "./hooks/post-tool.mjs": "./hooks/post-tool.mjs"
   },
   "scripts": {
-    "test": "node --test test/*.test.mjs"
+    "test": "node --test test/*.test.mjs",
+    "setup": "npm link"
   },
   "files": [
     "bin/",

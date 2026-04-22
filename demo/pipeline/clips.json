@@ -1,0 +1,62 @@
+{
+  "title": "claude-guide",
+  "subtitle": "Training wheels for Claude Code",
+  "format": {
+    "fps": 30,
+    "crf": 17,
+    "transition_ms": 300,
+    "transition_card_s": 1.9,
+    "title_hold_s": 1.45,
+    "end_hold_s": 3.2
+  },
+  "clips": [
+    {
+      "id": "02-explain",
+      "label": "Explain",
+      "file": "clips/02-explain.mp4",
+      "caption_title": "Plain-English previews",
+      "caption_body": "Claude explains each action before it happens",
+      "start_s": 9.0,
+      "hold_s": 9.0,
+      "speed": 1.0,
+      "zoom": 1.10,
+      "source_crop": { "x": 0, "y": 44, "w": 1320, "h": 760 }
+    },
+    {
+      "id": "03-block",
+      "label": "Block",
+      "file": "clips/03-block.mp4",
+      "caption_title": "Risky commands stop here",
+      "caption_body": "Dangerous actions are blocked with a clear reason",
+      "start_s": 11.5,
+      "hold_s": 8.6,
+      "speed": 1.0,
+      "zoom": 1.10,
+      "source_crop": { "x": 0, "y": 44, "w": 1320, "h": 760 }
+    },
+    {
+      "id": "04-status",
+      "label": "Status",
+      "file": "clips/04-status.mp4",
+      "caption_title": "Progress stays visible",
+      "caption_body": "The guide tracks what still needs explaining",
+      "start_s": 0,
+      "hold_s": 5.8,
+      "speed": 1.0,
+      "zoom": 1.16,
+      "source_crop": { "x": 0, "y": 0, "w": 1320, "h": 640 }
+    }
+  ],
+  "palette": {
+    "bg": "#100e0c",
+    "surface": "#1a1614",
+    "text": "#f5ede3",
+    "dim": "#7a6e68",
+    "accent": "#d77757",
+    "accent_bright": "#e8956e",
+    "green": "#4caf72",
+    "red": "#e85555",
+    "caption_bg": "#1a1614",
+    "caption_border": "#d77757"
+  }
+}

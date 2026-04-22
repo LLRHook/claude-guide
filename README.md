@@ -11,6 +11,21 @@ claude-guide init
 
 That's it. Just use Claude Code normally after that.
 
+## Demo
+
+[![Watch the claude-guide demo](demo/pipeline/output/preview-explain.png)](demo/pipeline/output/claude-guide-demo.mp4)
+
+Watch the demo video: [claude-guide-demo.mp4](demo/pipeline/output/claude-guide-demo.mp4)
+
+### From source
+
+```
+git clone https://github.com/victorivanov/claude-guide.git
+cd claude-guide
+npm run setup
+claude-guide init
+```
+
 ---
 
 ## What it looks like
