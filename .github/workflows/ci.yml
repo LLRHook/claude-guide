@@ -11,7 +11,12 @@ permissions:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    env:
+      RUSTUP_AUTO_INSTALL: '0'
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 10
 
     steps:
@@ -23,5 +28,22 @@ jobs:
         with:
           node-version: 22
 
-      - name: Test
-        run: npm test
+      - name: Check Rust formatting
+        run: cargo fmt --manifest-path native/Cargo.toml --check
+
+      - name: Set up Python for isolated tarball checks
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.13'
+
+      - name: Check Rust
+        run: cargo clippy --offline --locked --manifest-path native/Cargo.toml -- -D warnings
+
+      - name: Build native guard
+        run: npm run build:native
+
+      - name: Test real native guard, hooks, and worker isolation
+        run: npm run test:native
+
+      - name: Test packed native library and installed hooks in a synthetic home
+        run: npm run test:package

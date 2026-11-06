@@ -13,14 +13,27 @@
   },
   "scripts": {
     "test": "node --test test/*.test.mjs",
-    "setup": "npm link"
+    "setup": "npm link",
+    "build:native": "node scripts/build-native.mjs",
+    "prepare": "npm run build:native",
+    "prepack": "npm run build:native",
+    "install": "node scripts/install-native.mjs",
+    "test:native": "node scripts/test-native.mjs",
+    "test:package": "python scripts/package_smoke.py",
+    "pretest": "npm run build:native"
   },
   "files": [
     "bin/",
     "hooks/",
     "lib/",
     "data/",
-    "README.md"
+    "README.md",
+    "scripts/",
+    "native/Cargo.toml",
+    "native/Cargo.lock",
+    "native/build.rs",
+    "native/src/",
+    "native/*/guardrails.node"
   ],
   "engines": {
     "node": ">=18.0.0"

@@ -6,3 +6,7 @@ Thumbs.db
 # Local agent context
 CLAUDE.md
 .claude/
+
+# Host-specific Rust outputs (packaged via package.json files)
+native/target/
+native/*/*.node
