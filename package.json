@@ -19,6 +19,7 @@
     "prepack": "npm run build:native",
     "install": "node scripts/install-native.mjs",
     "test:native": "node scripts/test-native.mjs",
+    "test:package": "python scripts/package_smoke.py",
     "pretest": "npm run build:native"
   },
   "files": [

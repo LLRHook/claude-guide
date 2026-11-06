@@ -9,7 +9,9 @@ const result = spawnSync("cargo", [
   "build", "--offline", "--locked", "--release",
   "--manifest-path", join(root, "native", "Cargo.toml"),
   "--message-format=json-render-diagnostics",
-], { cwd: root, encoding: "utf8", maxBuffer: 8 * 1024 * 1024 });
+], { cwd: root, encoding: "utf8", maxBuffer: 8 * 1024 * 1024,
+  env: { ...process.env, RUSTUP_AUTO_INSTALL: "0" },
+});
 if (result.stderr) process.stderr.write(result.stderr);
 if (result.error || result.status !== 0) {
   throw new Error(`Could not build guard core: ${result.error?.message || result.status}`);

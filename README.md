@@ -205,6 +205,7 @@ builds the native library through npm's `prepare` step. To build or test directl
 ```
 npm run build:native
 npm test
+npm run test:package
 cargo fmt --manifest-path native/Cargo.toml --check
 cargo clippy --offline --locked --manifest-path native/Cargo.toml -- -D warnings
 ```
@@ -213,6 +214,9 @@ cargo clippy --offline --locked --manifest-path native/Cargo.toml -- -D warnings
 compatibility and sandbox lifecycle tests. `npm run test:native` checks an existing
 build without rebuilding. The native tests require the Rust backend to load;
 they cannot pass by silently using the JavaScript fallback.
+`npm run test:package` uses Python 3.13 to check the actual tarball, packaged native
+loader and installed hook lifecycle in a temporary synthetic home. The offline
+builder disables rustup's toolchain auto-install as well as Cargo network access.
 
 `npm pack` builds and validates a library for the current Node runtime before
 including it at `native/<platform>-<arch>/guardrails.node`. It also includes Rust
