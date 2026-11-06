@@ -1,0 +1,12 @@
+[package]
+name = "claude-guide-guard-core"
+version = "1.0.0"
+edition = "2021"
+rust-version = "1.82"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[profile.release]
+strip = "debuginfo"

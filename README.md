@@ -76,7 +76,9 @@ claude-guide installs two [hooks](https://docs.anthropic.com/en/docs/claude-code
 
 It also appends an educational overlay to your `~/.claude/CLAUDE.md` that instructs Claude to explain actions, translate jargon, and guide you through the graduation process.
 
-Everything is local. Zero network calls. Zero external dependencies. Just Node.js built-ins.
+Everything is local. Zero network calls and zero npm or Cargo dependencies. A Rust
+Node-API library evaluates guard policy in the Node process. JavaScript keeps the
+actual regular expressions, message formatting, profiles, journal and CLI.
 
 ---
 
@@ -190,7 +192,33 @@ No data is sent to any server. No analytics. No telemetry. No network calls of a
 - **Claude Code** installed at `~/.claude/`
 - **macOS** or **Windows** (Linux works but isn't the primary target)
 
-Zero npm dependencies. The package uses only Node.js built-ins (`fs`, `os`, `path`, `readline`, `url`).
+Zero npm or Cargo dependencies. The package uses Node.js built-ins and a small
+Rust library. A package includes the native build for its packing platform and
+architecture. If that build cannot load on your machine, installation attempts an
+offline build using an already installed **Rust 1.82+** toolchain and system linker.
+If no compatible build is available, the original JavaScript guard evaluator is
+used, with the same rules and messages. No compiler runs inside either hook.
+
+Working from source requires Rust 1.82+ and a system linker. `npm run setup`
+builds the native library through npm's `prepare` step. To build or test directly:
+
+```
+npm run build:native
+npm test
+cargo fmt --manifest-path native/Cargo.toml --check
+cargo clippy --offline --locked --manifest-path native/Cargo.toml -- -D warnings
+```
+
+`npm test` first builds the native core, then runs the unit, hook integration,
+compatibility and sandbox lifecycle tests. `npm run test:native` checks an existing
+build without rebuilding. The native tests require the Rust backend to load;
+they cannot pass by silently using the JavaScript fallback.
+
+`npm pack` builds and validates a library for the current Node runtime before
+including it at `native/<platform>-<arch>/guardrails.node`. It also includes Rust
+sources and the dependency-free Cargo lockfile for offline builds on other hosts.
+CI is configured to build and test on macOS, Linux and Windows; a local run
+proves only the host platform it actually executes.
 
 ---
 
@@ -216,15 +244,36 @@ claude-guide/
 │   ├── paths.mjs            Cross-platform path constants
 │   ├── profile.mjs          Learning profile read/write
 │   ├── journal.mjs          Activity log + rendering
-│   ├── guardrails.mjs       Pattern matching engine
+│   ├── guardrails.mjs       V8 RegExp boundary + JavaScript fallback
+│   ├── native-guard.mjs     In-process native loader
+│   ├── native-path.mjs      Platform/architecture lookup
 │   ├── installer.mjs        Init flow
 │   └── uninstaller.mjs      Clean removal
+├── native/
+│   ├── Cargo.toml          Dependency-free Rust Node-API library
+│   └── src/               Rule order, tool filters and candidate evaluation
+├── scripts/               Native build, install and test entry points
 └── data/
     ├── claude-md-overlay.md  Educational instructions for Claude
     └── dangerous-patterns.json  Guard rail definitions
 ```
 
-All files are ESM (`.mjs`). No bash scripts, no PowerShell scripts. Hooks execute synchronously in under 100ms. The PostToolUse hook never blocks — it always exits 0, even on errors.
+Node entry points are ESM (`.mjs`). The PreToolUse hook calls the native policy
+core once per action, in process, with no subprocess or JSON conversion. Rust
+walks permanent rules first, beginner rules only at beginner level, and sensitive
+warnings last. It collects string fields in their original order and stops at
+the first matching rule. Each regex test uses the original V8 `RegExp` object,
+including lookarounds, backreferences, Unicode and `g`/`y` `lastIndex` behavior.
+Patterns and flags are never translated to a Rust regex engine.
+
+Message text, stderr output and exit codes are unchanged: blocks exit 2, warnings
+and allowed actions exit 0. A missing or invalid profile allows the action. Catalog
+loading retains its existing behavior: a read/parse/compile error leaves any
+already loaded groups in place, with later groups empty. Evaluation errors allow
+the action without a warning. A missing, damaged or incompatible native library
+uses the JavaScript evaluator instead of disabling guard rails. The PostToolUse
+hook keeps its journal, counters and graduation behavior and always exits 0,
+even on errors. No hook latency improvement is claimed.
 
 ---
 

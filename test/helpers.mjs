@@ -7,10 +7,11 @@
 
 import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync } from "fs";
 import { tmpdir } from "os";
-import { join } from "path";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 import { spawnSync } from "child_process";
 
-const PROJECT_ROOT = join(import.meta.dirname, "..");
+const PROJECT_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 // ─── Temp HOME factory ─────────────────────────────────────────────────────
 
