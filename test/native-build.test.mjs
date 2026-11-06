@@ -10,7 +10,7 @@ it("disables rustup toolchain auto-install before invoking offline Cargo", async
     assert.equal(command, "cargo");
     assert.ok(arguments_.includes("--offline"));
     assert.equal(options.env.RUSTUP_AUTO_INSTALL, "0");
-    assert.equal(options.env.PATH, process.env.PATH);
+    assert.deepEqual(options.env, { ...process.env, RUSTUP_AUTO_INSTALL: "0" });
     throw stopped;
   };
   syncBuiltinESMExports();
